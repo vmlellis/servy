@@ -23,4 +23,4 @@ erl_crash.dump
 servy-*.tar
 
 # Ignore Elixir ls package
-/.elixir_ls/
+.elixir_ls/
