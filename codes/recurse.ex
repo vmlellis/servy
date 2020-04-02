@@ -1,10 +1,14 @@
-defmodule Servy.Recurse do
+defmodule Recurse do
   def loopy([head | tail]) do
     IO.puts "Head: #{head} Tail: #{inspect(tail)}"
     loopy(tail)
   end
 
   def loopy([]), do: IO.puts "Done!"
+
+  def sum(list) do
+    sum(list, 0)
+  end
 
   def sum([head | tail], total) do
     IO.puts "Total: #{total} Head: #{head} Tail: #{inspect(tail)}"
@@ -31,3 +35,6 @@ defmodule Servy.Recurse do
     current_list |> Enum.reverse()
   end
 end
+
+IO.inspect Recurse.triple([1,2,3])
+IO.inspect Recurse.sum([1,2,3])

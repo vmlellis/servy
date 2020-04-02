@@ -109,16 +109,16 @@ end
 # response = Servy.Handler.handle(request)
 # IO.puts response
 
-# request = """
-# GET /bears HTTP/1.1
-# Host: example.com
-# User-Agent: ExampleBrowser/1.0
-# Accept: */*
+request = """
+GET /bears HTTP/1.1
+Host: example.com
+User-Agent: ExampleBrowser/1.0
+Accept: */*
 
-# """
+"""
 
-# response = Servy.Handler.handle(request)
-# IO.puts response
+response = Servy.Handler.handle(request)
+IO.puts response
 
 
 # response = Servy.Handler.handle(request)
