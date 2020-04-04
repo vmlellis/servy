@@ -20,6 +20,7 @@ defmodule Servy.Handler do
     |> route
     |> track
     # |> emojify
+    |> put_content_length
     |> format_response
   end
 
@@ -29,6 +30,10 @@ defmodule Servy.Handler do
 
   def route(%Conv{method: "GET", path: "/bears"} = conv) do
     BearController.index(conv)
+  end
+
+  def route(%Conv{method: "GET", path: "/api/bears"} = conv) do
+    Servy.Api.BearController.index(conv)
   end
 
   def route(%Conv{method: "GET", path: "/bears/new"} = conv) do
@@ -48,6 +53,10 @@ defmodule Servy.Handler do
     BearController.create(conv)
   end
 
+  def route(%Conv{method: "POST", path: "/api/bears"} = conv) do
+    Servy.Api.BearController.create(conv)
+  end
+
   def route(%Conv{method: "DELETE", path: "/bears/" <> _id} = conv) do
     BearController.delete(conv)
   end
@@ -57,6 +66,14 @@ defmodule Servy.Handler do
     |> Path.join("about.html")
     |> File.read
     |> handle_file(conv)
+  end
+
+  def route(%Conv{method: "GET", path: "/faq"} = conv) do
+    @pages_path
+    |> Path.join("faq.md")
+    |> File.read
+    |> handle_file(conv)
+    |> markdown_to_html
   end
 
   # def route(%{method: "GET", path: "/pages/" <> file} = conv) do
@@ -87,13 +104,31 @@ defmodule Servy.Handler do
   #   end
   # end
 
-  def format_response(%Conv{} = conv) do
+  defp format_response(%Conv{} = conv) do
     """
     HTTP/1.1 #{Conv.full_status(conv)}\r
-    Content-Type: text/html\r
-    Content-Length: #{byte_size(conv.resp_body)}\r
+    #{format_response_headers(conv)}
     \r
     #{conv.resp_body}
     """
   end
+
+  defp put_content_length(conv) do
+    headers =
+      conv.resp_headers
+      |> Map.put("Content-Length", byte_size(conv.resp_body))
+
+    %{ conv | resp_headers: headers }
+  end
+
+  defp format_response_headers(conv) do
+    arr = Enum.map(conv.resp_headers, fn {k, v} -> "#{k}: #{v}\r" end)
+    arr |> Enum.sort |> Enum.reverse |> Enum.join("\n")
+  end
+
+  defp markdown_to_html(%Conv{status: 200} = conv) do
+    %{ conv | resp_body: Earmark.as_html!(conv.resp_body) }
+  end
+
+  defp markdown_to_html(%Conv{} = conv), do: conv
 end
