@@ -11,23 +11,31 @@ defmodule Servy.Plugins do
 
   @doc "Logs 404 requests"
   def track(%Conv{status: 404, path: path} = conv) do
-    Logger.warn "Do we have a problem, Houston?"
-    IO.puts "Warning: #{path} is on the loose!"
+    if Mix.env != :test do
+      Logger.warn "Do we have a problem, Houston?"
+      IO.puts "Warning: #{path} is on the loose!"
+    end
     conv
   end
 
   def track(%Conv{status: 403} = conv) do
-    Logger.warn "Do we have a problem, Houston?"
+    if Mix.env != :test do
+      Logger.warn "Do we have a problem, Houston?"
+    end
     conv
   end
 
   def track(%Conv{status: 500} = conv) do
-    Logger.error "Danger Will Robinson!"
+    if Mix.env != :test do
+      Logger.error "Danger Will Robinson!"
+    end
     conv
   end
 
   def track(%Conv{status: 200} = conv) do
-    Logger.info "It's lunchtime somewhere."
+    if Mix.env != :test do
+      Logger.info "It's lunchtime somewhere."
+    end
     conv
   end
 
@@ -55,5 +63,10 @@ defmodule Servy.Plugins do
 
   def rewrite_path_captures(%Conv{} = conv, nil), do: conv
 
-  def log(%Conv{} = conv), do: IO.inspect conv
+  def log(%Conv{} = conv) do
+    if Mix.env == :dev do
+      IO.inspect conv
+    end
+    conv
+  end
 end
