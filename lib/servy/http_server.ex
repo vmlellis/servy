@@ -7,8 +7,8 @@ defmodule Servy.HttpServer do
 
     # Creates a socket to listen for client connections.
     # `listen_socket` is bound to the listening socket.
-    {:ok, listen_socket} =
-      :gen_tcp.listen(port, [:binary, packet: :raw, active: false, reuseaddr: true])
+    options = [:binary, backlog: 10, packet: :raw, active: false, reuseaddr: true]
+    {:ok, listen_socket} = :gen_tcp.listen(port, options)
 
     # Socket options (don't worry about these details):
     # `:binary` - open the socket in "binary" mode and deliver data as binaries
@@ -34,7 +34,9 @@ defmodule Servy.HttpServer do
     IO.puts "⚡️  Connection accepted!\n"
 
     # Receives the request and sends a response over the client socket.
-    spawn(fn -> serve(client_socket) end)
+    pid = spawn(fn -> serve(client_socket) end)
+
+    :ok = :gen_tcp.controlling_process(client_socket, pid)
 
     # Loop back to wait and accept the next connection.
     accept_loop(listen_socket)
