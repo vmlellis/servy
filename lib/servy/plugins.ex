@@ -14,6 +14,7 @@ defmodule Servy.Plugins do
     if Mix.env != :test do
       Logger.warn "Do we have a problem, Houston?"
       IO.puts "Warning: #{path} is on the loose!"
+      Servy.FourOhFourCounter.bump_count(path)
     end
     conv
   end

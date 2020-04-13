@@ -5,6 +5,9 @@ defmodule Servy.HttpServer do
   """
   def start(port) when is_integer(port) and port > 1023 do
 
+    Servy.PledgeServer.start()
+    Servy.FourOhFourCounter.start()
+
     # Creates a socket to listen for client connections.
     # `listen_socket` is bound to the listening socket.
     options = [:binary, backlog: 10, packet: :raw, active: false, reuseaddr: true]
