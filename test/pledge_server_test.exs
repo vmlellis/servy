@@ -4,7 +4,7 @@ defmodule PledgeServerTest do
   alias Servy.PledgeServer
 
   test "caches the 3 most recent pledges and totals their amounts" do
-    pid = PledgeServer.start()
+    {:ok, pid} = PledgeServer.start()
 
     send pid, {:stop, "hammertime"}
 

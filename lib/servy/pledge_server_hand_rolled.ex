@@ -49,6 +49,11 @@ defmodule Servy.PledgeServerHandRolled do
     []
   end
 
+  def handle_info(other, state) do
+    IO.puts "Unexpected message: #{inspect other}"
+    state
+  end
+
   defp send_pledge_to_service(_name, _amount) do
     # CODE GOES HERE TO SEND PLEDGE TO EXTERNAL SERVICE
     {:ok, "pledge-#{:rand.uniform(1000)}"}
