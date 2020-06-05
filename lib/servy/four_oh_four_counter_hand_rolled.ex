@@ -25,6 +25,10 @@ defmodule Servy.FourOhFourCounterHandRolled do
 
   # Server Interface
 
+  def init(state) do
+    {:ok, state}
+  end
+
   def handle_call({:bump_count, path}, state) do
     new_state = state |> Map.update(path, 1, &(&1 + 1))
     {:ok, new_state}
