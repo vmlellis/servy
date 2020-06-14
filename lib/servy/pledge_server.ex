@@ -15,6 +15,11 @@ defmodule Servy.PledgeServer do
     GenServer.start(__MODULE__, %State{}, name: @name)
   end
 
+  def start_link(_arg) do
+    IO.puts "Starting the pledge server..."
+    GenServer.start_link(__MODULE__, %State{}, name: @name)
+  end
+
   def create_pledge(name, amount) do
     GenServer.call @name, {:create_pledge, name, amount}
   end

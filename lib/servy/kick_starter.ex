@@ -8,6 +8,11 @@ defmodule Servy.KickStarter do
     GenServer.start(__MODULE__, :ok, name: __MODULE__)
   end
 
+  def start_link(_arg) do
+    IO.puts "Starting the kickstarter..."
+    GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
+  end
+
   def get_server do
     # Alternative: Process.whereis(:http_server)
     GenServer.call(__MODULE__, :get_server)

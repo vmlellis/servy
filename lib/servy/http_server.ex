@@ -18,10 +18,6 @@ defmodule Servy.HttpServer do
 
     IO.puts "\n🎧  Listening for connection requests on port #{port}...\n"
 
-    Servy.PledgeServer.start()
-    Servy.FourOhFourCounter.start()
-    Servy.SensorServer.start()
-
     accept_loop(listen_socket)
   end
 
